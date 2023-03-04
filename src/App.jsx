@@ -19,24 +19,28 @@ export default function App() {
     );
 
     function handleAddItem(text) {
-        const newListItems = listItems.slice();
-        newListItems.push({
-            id: getId(),
-            text: text,
-            checked: false
-        });
-        setListItems(newListItems);
+        setListItems([
+            ...listItems,
+            {
+                id: getId(),
+                text: text,
+                checked: false
+            }
+        ]);
     }
 
     function handleCheckItem(id, enable) {
-        const newListItems = listItems.slice();
-        const elementToChange = newListItems.find((element) => element.id === id);
-        elementToChange.checked = enable;
-        setListItems(newListItems);
+        setListItems(listItems.map(element => {
+            if (element.id === id) {
+                return {...element, checked: enable};
+            } else {
+                return element;
+            }
+        }));
     }
 
     function handleDeleteItem(id) {
-        setListItems(listItems.filter((element) => element.id !== id));
+        setListItems(listItems.filter(element => element.id !== id));
     }
 
     function getId() {
