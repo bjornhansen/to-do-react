@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 
-export default function ListItem({listItem, handleDeleteItem, handleCheckItem}) {
+export default function ListItem({listItem, handleDeleteItem, handleCheckItem, handleChangeItem}) {
     const [editing, setEditing] = useState(false);
 
     return (
         <li className="flex border rounded space-x-2 p-2 mb-2">
             <input id={'checkbox' + listItem.id} type="checkbox" onChange={e => handleCheckItem(e, listItem.id)} checked={listItem.checked}/>
             {editing ?
-                <input className="grow border rounded grow p-1" /> :
+                <input className="grow border rounded grow p-1" onChange={e => handleChangeItem(e, listItem.id)} value={listItem.text} /> :
                 <div className={'grow' + (listItem.checked ? ' line-through' : '')}>{listItem.text}</div>
             }
             {editing ?

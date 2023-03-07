@@ -12,8 +12,10 @@ export default function App() {
             <Header></Header>
             <AddItemField handleAddItem={handleAddItem}></AddItemField>
             <List>
-                {listItems.map(e => <ListItem key={e.id} listItem={e} handleDeleteItem={handleDeleteItem}
-                                              handleCheckItem={handleCheckItem}></ListItem>)}
+                {listItems.map(e => (
+                    <ListItem key={e.id} listItem={e} handleDeleteItem={handleDeleteItem}
+                              handleCheckItem={handleCheckItem} handleChangeItem={handleChangeItem}></ListItem>
+                ))}
             </List>
         </div>
     );
@@ -24,7 +26,7 @@ export default function App() {
             {
                 id: getId(),
                 text: text,
-                checked: false
+                checked: false,
             }
         ]);
     }
@@ -34,7 +36,20 @@ export default function App() {
             if (e.id === id) {
                 return {
                     ...e,
-                    checked: event.target.checked
+                    checked: event.target.checked,
+                };
+            } else {
+                return e;
+            }
+        }));
+    }
+
+    function handleChangeItem(event, id) {
+        setListItems(listItems.map(e => {
+            if (e.id === id) {
+                return {
+                    ...e,
+                    text: event.target.value,
                 };
             } else {
                 return e;
