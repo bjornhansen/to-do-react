@@ -12,8 +12,8 @@ export default function App() {
             <Header></Header>
             <AddItemField handleAddItem={handleAddItem}></AddItemField>
             <List>
-                {listItems.map((obj) => <ListItem key={obj.id} id={obj.id} checked={obj.checked} text={obj.text}
-                                                  handleDeleteItem={handleDeleteItem} handleCheckItem={handleCheckItem}></ListItem>)}
+                {listItems.map(e => <ListItem key={e.id} listItem={e} handleDeleteItem={handleDeleteItem}
+                                              handleCheckItem={handleCheckItem}></ListItem>)}
             </List>
         </div>
     );
@@ -29,18 +29,21 @@ export default function App() {
         ]);
     }
 
-    function handleCheckItem(id, enable) {
-        setListItems(listItems.map(element => {
-            if (element.id === id) {
-                return {...element, checked: enable};
+    function handleCheckItem(event, id) {
+        setListItems(listItems.map(e => {
+            if (e.id === id) {
+                return {
+                    ...e,
+                    checked: event.target.checked
+                };
             } else {
-                return element;
+                return e;
             }
         }));
     }
 
     function handleDeleteItem(id) {
-        setListItems(listItems.filter(element => element.id !== id));
+        setListItems(listItems.filter(e => e.id !== id));
     }
 
     function getId() {
