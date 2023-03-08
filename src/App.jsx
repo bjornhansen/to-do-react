@@ -1,23 +1,32 @@
-import {React, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from "./components/Header";
 import List from "./components/List";
 import AddItemField from "./components/AddItemField";
 import ListItem from "./components/ListItem";
 
 export default function App() {
-    const [listItems, setListItems] = useState([]);
+    const initialListItems = JSON.parse(localStorage.getItem('listItems'));
+    const [listItems, setListItems] = useState(initialListItems ? initialListItems : []);
+    const [showCompletedItems, setShowCompletedItems] = useState(false);
+
+    useEffect(() => {
+        localStorage.setItem('listItems', JSON.stringify(listItems));
+    }, [listItems]);
 
     return (
-        <div className="">
-            <Header></Header>
+        <>
+            <Header showCompletedItems={showCompletedItems} handleToggleCompleted={handleToggleCompletedItems}></Header>
             <AddItemField handleAddItem={handleAddItem}></AddItemField>
             <List>
-                {listItems.map(e => (
-                    <ListItem key={e.id} listItem={e} handleDeleteItem={handleDeleteItem}
-                              handleCheckItem={handleCheckItem} handleChangeItem={handleChangeItem}></ListItem>
-                ))}
+                {listItems.map(e => {
+                    if (showCompletedItems) {
+                        return e.checked ? <ListItem key={e.id} listItem={e} handleDeleteItem={handleDeleteItem} handleCheckItem={handleCheckItem} handleChangeItem={handleChangeItem}></ListItem> : null;
+                    } else {
+                        return !e.checked ? <ListItem key={e.id} listItem={e} handleDeleteItem={handleDeleteItem} handleCheckItem={handleCheckItem} handleChangeItem={handleChangeItem}></ListItem> : null;
+                    }
+                })}
             </List>
-        </div>
+        </>
     );
 
     function handleAddItem(text) {
@@ -27,6 +36,7 @@ export default function App() {
                 id: getId(),
                 text: text,
                 checked: false,
+                created: new Date().toJSON(),
             }
         ]);
     }
@@ -55,6 +65,10 @@ export default function App() {
                 return e;
             }
         }));
+    }
+
+    function handleToggleCompletedItems() {
+        setShowCompletedItems(!showCompletedItems);
     }
 
     function handleDeleteItem(id) {
